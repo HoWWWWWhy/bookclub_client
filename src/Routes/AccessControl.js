@@ -3,9 +3,7 @@ import './AccessControl.css';
 
 const AccessControl = (props) => {
   const [currentUserName, setCurrentUserName] = useState("");
-  const [logInButtonText, setLogInButtonText] = useState("Log In with Google");
-  
-
+  console.log(props);
   useEffect(() => {
     console.log('useEffect');
     const init = () => {
@@ -31,6 +29,10 @@ const AccessControl = (props) => {
       document.body.appendChild(script);
     }    
     appendGoogleAuthScript();  
+    
+    return () => {
+      console.log("unmount");
+    };
   },[]);
 
   const SCOPE = 'https://www.googleapis.com/auth/calendar.readonly';
@@ -50,38 +52,64 @@ const AccessControl = (props) => {
     }
     window.myGoogleAuth.signIn(logInOptions).then(() => {
       console.log("Log In Success")
+      console.log(window.myGoogleAuth);
+      console.log(window.myGoogleAuth.isSignedIn.get());
       if(window.myGoogleAuth.isSignedIn.get()) {
         window.currentUser = window.myGoogleAuth.currentUser.get();
-        props.onChangeLogInStatus(1);
-        setCurrentUserName(window.currentUser.getBasicProfile().getName());
-        setLogInButtonText("Log Out");
+        const currentUserName = window.currentUser.getBasicProfile().getName();
+        props.onChangeLogInStatus(true, currentUserName);
       }
     });    
-    
   }
+
 
   const logOut = () => {
     console.log("try log out");
+    console.log(props);
+    /*
+    window.myGoogleAuth.disconnect().then(() => {
+      console.log("signOut");
+      console.log(window.myGoogleAuth);
+      console.log(window.myGoogleAuth.isSignedIn.get());
+      props.onChangeLogInStatus(false);
+      setCurrentUserName("");
+    });
+    */
+    
     window.myGoogleAuth.signOut().then(() => {
-      console.log("Log Out Success")
+      console.log("signOut");
+      console.log(window.myGoogleAuth);
+      console.log(window.myGoogleAuth.isSignedIn.get());
       if(!window.myGoogleAuth.isSignedIn.get()) {
-        props.onChangeLogInStatus(0);
-        setCurrentUserName("");
-        setLogInButtonText("Log In with Google");
+        console.log("Log Out Success");
+        props.onChangeLogInStatus(false, "");
+        //setCurrentUserName("");
       }
     });
+    
+    console.log("log out finish");
+    
+
+   
   }
-  
+
   return (
     <div className="AccessControl">
-      <button className="googleLoginButton" 
-        onClick={
-          props.logInStatus === 0 ? logIn : logOut
-        }>{logInButtonText}
-      </button>
-      <p>
-        Hello! {currentUserName}
-      </p>
+      { props.logInStatus === false ? 
+        <button className="googleLoginButton"
+          onClick={ logIn }>
+        </button> :
+        //<p>Hello! {currentUserName}</p>
+        
+        ( props.logOutCmd === true ? 
+          logOut()  :
+          //<p>Log Out</p> :
+          <p>Hello! {currentUserName}</p>
+        )
+        
+        
+        
+      }
     </div>
   );
 }

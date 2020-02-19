@@ -1,0 +1,17 @@
+.AccessControl {
+    text-align: center;
+}
+
+.googleLoginButton {
+    background: url('btn_google_signin_light_normal_web.png') no-repeat;
+    width: 191px;
+    height: 46px;
+    margin: 50px auto;
+}
+
+
+
+.loginButton:hover {
+    cursor: pointer;
+}
+
