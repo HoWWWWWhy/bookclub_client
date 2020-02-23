@@ -1,22 +1,23 @@
-import React, { useState, useEffect }  from 'react';
+import React, { useEffect }  from 'react';
 import './AccessControl.css';
 
 const AccessControl = (props) => {
-  const [currentUserName, setCurrentUserName] = useState("");
   console.log(props);
   useEffect(() => {
-    console.log('useEffect');
+    console.log('AccessControl Mounted');
     const init = () => {
       console.log("init");
-      window.gapi.load('auth2', function() {
-        /* Ready. Make a call to gapi.auth2.init or some other API */
-        const clientId = {
-          client_id: CLIENT_ID
-        }
-        window.myGoogleAuth = window.gapi.auth2.init(clientId);
-        window.myGoogleAuth.then(onInit, onError);
-        
-      });
+      //if(!props.logOutCmd) {
+        window.gapi.load('auth2', function() {
+          /* Ready. Make a call to gapi.auth2.init or some other API */
+          const clientId = {
+            client_id: CLIENT_ID
+          }
+          window.myGoogleAuth = window.gapi.auth2.init(clientId);
+          window.myGoogleAuth.then(onInit, onError);
+
+        });    
+      //}
     }
         
     const appendGoogleAuthScript = () => {
@@ -28,6 +29,7 @@ const AccessControl = (props) => {
       
       document.body.appendChild(script);
     }    
+
     appendGoogleAuthScript();  
     
     return () => {
@@ -58,39 +60,37 @@ const AccessControl = (props) => {
         window.currentUser = window.myGoogleAuth.currentUser.get();
         const currentUserName = window.currentUser.getBasicProfile().getName();
         props.onChangeLogInStatus(true, currentUserName);
+        localStorage.setItem('currentUserName', currentUserName);
       }
     });    
+    
   }
 
 
   const logOut = () => {
     console.log("try log out");
-    console.log(props);
+    props.onChangeLogInStatus(false, "");
+    localStorage.removeItem('currentUserName');
     /*
     window.myGoogleAuth.disconnect().then(() => {
       console.log("signOut");
       console.log(window.myGoogleAuth);
       console.log(window.myGoogleAuth.isSignedIn.get());
-      props.onChangeLogInStatus(false);
-      setCurrentUserName("");
+      //props.onChangeLogInStatus(false);
     });
     */
-    
+    if(window.myGoogleAuth) {
     window.myGoogleAuth.signOut().then(() => {
       console.log("signOut");
       console.log(window.myGoogleAuth);
       console.log(window.myGoogleAuth.isSignedIn.get());
       if(!window.myGoogleAuth.isSignedIn.get()) {
         console.log("Log Out Success");
-        props.onChangeLogInStatus(false, "");
-        //setCurrentUserName("");
+        //props.onChangeLogInStatus(false, "");
       }
     });
-    
+    }
     console.log("log out finish");
-    
-
-   
   }
 
   return (
@@ -99,12 +99,8 @@ const AccessControl = (props) => {
         <button className="googleLoginButton"
           onClick={ logIn }>
         </button> :
-        //<p>Hello! {currentUserName}</p>
-        
-        ( props.logOutCmd === true ? 
-          logOut()  :
-          //<p>Log Out</p> :
-          <p>Hello! {currentUserName}</p>
+        (
+          props.logOutCmd === true ? logOut() : <h1>ddd</h1>
         )
         
         

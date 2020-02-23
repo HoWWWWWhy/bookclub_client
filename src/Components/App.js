@@ -3,41 +3,44 @@ import React, { useState, useEffect }  from 'react';
 import './App.css';
 import AppRouter from './AppRouter.js';
 
+const checkLogInStatus = () => localStorage.getItem('currentUserName');
+
 const App = () => {
   
-  //const [logInStatus, setLogInStatus] = useState(false);
-  //const [logInMenuText, setLogInMenuText] = useState("Log In");
   const [logIn, setLogIn] = useState({
     status: false,
     text: "Log In",
     username: ""
   });
-  //setUserRequest({ loading: true });
-  //const { loading, user } = userRequest;
 
   useEffect(() => {
-    console.log("App.js");
-  });
+    console.log("App Mounted");
+    const currentUserName = checkLogInStatus();
+    if(currentUserName) {
+      setLogIn({
+        status: true,
+        text: "Log Out",
+        username: currentUserName
+      });  
+    }
+  },[]);
 
   const changeLogInStatus = (status, username) => {
     console.log("login status:", status);
-    if(status) {
-      //setLogInMenuText("Log Out");   
+    if(status) { 
       setLogIn({
         status,
         text: "Log Out",
         username
       });  
     } else {
-      //setLogInMenuText("Log In");
       setLogIn({
         status,
         text: "Log In",
         username
       }); 
     }
-    
-    //setLogInStatus(status);
+
   }
 
   const { status, text, username } = logIn;

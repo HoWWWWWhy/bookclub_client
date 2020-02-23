@@ -1,36 +1,45 @@
-import React, { useState, useEffect }  from 'react';
-import { BrowserRouter as Router, Link, Route, Switch, Redirect } from "react-router-dom";
+import React from 'react';
+import { BrowserRouter as Router, NavLink, Route, Switch, Redirect } from "react-router-dom";
+
+import './AppRouter.css';
 import Home from '../Routes/Home.js';
 import Create from '../Routes/Create.js';
 import Update from '../Routes/Update.js';
 import Read from '../Routes/Read.js';
 import AccessControl from '../Routes/AccessControl.js';
+import NotFound from '../Routes/NotFound.js';
 
 const LogInRoutes = (props) => {
     console.log("login_routes");
     console.log(props);
     return (
-        <>
+        <Switch>
             <Route exact path = "/" render={
                 (myprops) => <Home
                     {...myprops}
                     username = {props.userName}
                 />}>
             </Route>
-            <Route path = "/home" component={Home}></Route>
+            <Route path = "/home" render={
+                (myprops) => <Home
+                {...myprops}
+                username = {props.userName}
+            />}>
+            </Route>
             <Route path = "/create" component={Create}></Route>
             <Route path = "/update" component={Update}></Route>
             <Route path = "/read" component={Read}></Route>
             
-            <Route exact path = "/logout" render={
+            <Route path = "/logout" render={
                 (myprops) => <AccessControl 
                     {...myprops}
                     logInStatus = {props.logInStatus}
                     onChangeLogInStatus = {props.onChangeLogInStatus}
                     logOutCmd = {true}
                 />}>
-            </Route>     
-        </>
+            </Route>   
+            <Route path = "/"><NotFound /></Route>
+        </Switch>
     );
 }
 
@@ -38,13 +47,9 @@ const LogOutRoutes = (props) => {
     console.log(props)
     console.log("logout_routes");
     return (
-        <>
-            <Route exact path = "/" render={
-                (myprops) => <Home
-                    {...myprops}
-                    username = {props.userName}
-                />}>
-            </Route>
+        
+        <Switch>
+            <Route exact path = "/" component={Home}></Route>
             <Route path = "/home" component={Home}></Route>
             <Route path = "/login" render={
                 (myprops) => <AccessControl 
@@ -54,10 +59,10 @@ const LogOutRoutes = (props) => {
                     logOutCmd = {false}
                 />}>
             </Route>
-            {/*<Redirect from = "/login" to = "/" />*/}
+            <Route path = "/"><NotFound /></Route>
             
-
-        </>
+            </Switch>
+        
     );
 }
 
@@ -69,44 +74,42 @@ const AppRouter = (props) => {
         <ul>
           { props.logInStatus ?
             <>
-            <li className="menu_left"><Link to="/home">HOME</Link></li>
-            <li className="menu_left"><Link to="/create">Write</Link></li>
-            <li className="menu_left"><Link to="/read">View</Link></li>
-            <li className="menu_right"><Link to="/logout">{props.logInMenuText}</Link></li>
-            <li className="menu_right"><Link to="/mypage">My Page</Link></li>
+            <li className="menu_left"><NavLink to="/home" activeClassName="selected">HOME</NavLink></li>
+            <li className="menu_left"><NavLink to="/create" activeClassName="selected">Write</NavLink></li>
+            <li className="menu_left"><NavLink to="/read" activeClassName="selected">View</NavLink></li>
+            <li className="menu_right"><NavLink to="/logout" activeClassName="selected">{props.logInMenuText}</NavLink></li>
+            <li className="menu_right"><NavLink to="/mypage" activeClassName="selected">My Page</NavLink></li>
             </> :
             <>
-              <li className="menu_left"><Link to="/home">HOME</Link></li>
-              <li className="menu_right"><Link to="/login">{props.logInMenuText}</Link></li>
+              <li className="menu_left"><NavLink to="/home" activeClassName="selected">HOME</NavLink></li>
+              <li className="menu_right"><NavLink to="/login" activeClassName="selected">{props.logInMenuText}</NavLink></li>
             </>
           }
-
-          
-          
-
         </ul>
         </nav>         
-    
-        <Switch>
-            
+        
         { props.logInStatus ? 
             <>
             <LogInRoutes 
+                logInStatus = {props.logInStatus}
+                onChangeLogInStatus = {props.onChangeLogInStatus}
                 userName = {props.userName}
             />
             <Redirect from = "/login" to = "/" />
-            </>:
+            </> :
+            
             <>
+            <Redirect from = "/logout" to = "/" />
             <LogOutRoutes 
                 logInStatus = {props.logInStatus}
                 onChangeLogInStatus = {props.onChangeLogInStatus}
                 userName = {props.userName}
             />
-            
             </>
+            
         }
         
-        </Switch>
+        
     </Router>
   );
 }
