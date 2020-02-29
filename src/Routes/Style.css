@@ -1,0 +1,26 @@
+.bookCardContainer {
+  flex-direction: column;
+}
+
+.bookCard {
+  display: inline-block;
+  width: 150px;
+  height: 260px;
+  margin: 20px 10px;
+  border-color: grey;
+  border-style: solid;
+  border-radius: 20px;
+  text-align: center;
+}
+
+.bookCardLink {
+  color: grey;
+}
+.bookCardLink:hover {
+  color: black;
+}
+
+.bookCardThumbnail {
+  border-style: solid;
+  border-width: 1px;
+}
