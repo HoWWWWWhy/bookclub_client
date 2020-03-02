@@ -125,7 +125,7 @@ const AppRouter = props => {
             logInStatus={props.logInStatus}
             onChangeLogInStatus={props.onChangeLogInStatus}
           />
-          <Redirect from="/login" to="/" />
+          <Redirect exact path from="/login" to="/" />
         </>
       ) : (
         <>

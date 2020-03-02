@@ -40,7 +40,9 @@ const BookCard = props => {
 
   return (
     <div className="bookCard">
-      <p>{bookTitle}</p>
+      <div className="bookCardTitle">
+        <a href="naver.com">{bookTitle}</a>
+      </div>
       <a
         className="bookCardLink"
         href={bookInfo.url}

@@ -2,7 +2,6 @@ import React, { useContext } from "react";
 import Store from "../store";
 
 const MyPage = () => {
-  const logInStore = useContext(Store);
   /*
   const key1 = 10;
   const key2 = 20;
@@ -15,11 +14,15 @@ const MyPage = () => {
     console.log(await response.json());
   };
   callApi();
-  */
+*/
+  const logInStore = useContext(Store)["logIn"];
 
+  const username = logInStore.userInfo[0];
+  const email = logInStore.userInfo[1];
   return (
     <>
-      <h1>이름: {logInStore.username}</h1>
+      <h1>이름: {username}</h1>
+      <h1>Email: {email}</h1>
     </>
   );
 };

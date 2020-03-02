@@ -60,8 +60,15 @@ const AccessControl = props => {
       if (window.myGoogleAuth.isSignedIn.get()) {
         window.currentUser = window.myGoogleAuth.currentUser.get();
         const currentUserName = window.currentUser.getBasicProfile().getName();
-        props.onChangeLogInStatus(true, currentUserName);
-        localStorage.setItem("currentUserName", currentUserName);
+        const currentUserEmail = window.currentUser
+          .getBasicProfile()
+          .getEmail();
+        const currentUserInfo = JSON.stringify([
+          currentUserName,
+          currentUserEmail
+        ]);
+        props.onChangeLogInStatus(true, JSON.parse(currentUserInfo));
+        localStorage.setItem("currentUserInfo", currentUserInfo);
       }
     });
   };
@@ -69,7 +76,7 @@ const AccessControl = props => {
   const logOut = () => {
     console.log("try log out");
     props.onChangeLogInStatus(false, "");
-    localStorage.removeItem("currentUserName");
+    localStorage.removeItem("currentUserInfo");
     /*
     window.myGoogleAuth.disconnect().then(() => {
       console.log("signOut");
