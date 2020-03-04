@@ -15,9 +15,8 @@ import MyPage from "../Routes/MyPage";
 import AccessControl from "../Routes/AccessControl";
 import NotFound from "../Routes/NotFound";
 
-const LogInRoutes = props => {
+const LogInRoutes = () => {
   console.log("login_routes");
-  console.log(props);
   return (
     <Switch>
       <Route exact path="/" component={Home}></Route>
@@ -27,14 +26,7 @@ const LogInRoutes = props => {
       <Route path="/mypage" component={MyPage}></Route>
       <Route
         path="/logout"
-        render={myprops => (
-          <AccessControl
-            {...myprops}
-            logInStatus={props.logInStatus}
-            onChangeLogInStatus={props.onChangeLogInStatus}
-            logOutCmd={true}
-          />
-        )}
+        render={props => <AccessControl {...props} logOutCmd={true} />}
       ></Route>
       <Route path="/">
         <NotFound />
@@ -43,8 +35,7 @@ const LogInRoutes = props => {
   );
 };
 
-const LogOutRoutes = props => {
-  console.log(props);
+const LogOutRoutes = () => {
   console.log("logout_routes");
   return (
     <Switch>
@@ -52,14 +43,7 @@ const LogOutRoutes = props => {
       <Route path="/home" component={Home}></Route>
       <Route
         path="/login"
-        render={myprops => (
-          <AccessControl
-            {...myprops}
-            logInStatus={props.logInStatus}
-            onChangeLogInStatus={props.onChangeLogInStatus}
-            logOutCmd={false}
-          />
-        )}
+        render={props => <AccessControl {...props} logOutCmd={false} />}
       ></Route>
       <Route path="/">
         <NotFound />
@@ -121,19 +105,13 @@ const AppRouter = props => {
 
       {props.logInStatus ? (
         <>
-          <LogInRoutes
-            logInStatus={props.logInStatus}
-            onChangeLogInStatus={props.onChangeLogInStatus}
-          />
+          <LogInRoutes />
           <Redirect exact path from="/login" to="/" />
         </>
       ) : (
         <>
           <Redirect from="/logout" to="/" />
-          <LogOutRoutes
-            logInStatus={props.logInStatus}
-            onChangeLogInStatus={props.onChangeLogInStatus}
-          />
+          <LogOutRoutes />
         </>
       )}
     </Router>

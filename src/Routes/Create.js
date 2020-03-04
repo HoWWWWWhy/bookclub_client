@@ -3,10 +3,9 @@ import "./Style.css";
 import Store from "../store";
 
 const Create = () => {
-  const logInStore = useContext(Store)["logIn"];
-  const bookListStore = useContext(Store)["bookList"];
+  const { logIn, bookList } = useContext(Store);
 
-  const [bookTitle, setBookTitle] = useState(bookListStore[1]);
+  const [bookTitle, setBookTitle] = useState(bookList[1]);
   const [title, setTitle] = useState("");
   const [review, setReview] = useState("");
 
@@ -17,7 +16,7 @@ const Create = () => {
     console.log("review:", review);
   };
 
-  const username = logInStore.userInfo[0];
+  const username = logIn.userInfo[0];
 
   return (
     <>
@@ -30,7 +29,7 @@ const Create = () => {
               value={bookTitle}
               onChange={event => setBookTitle(event.target.value)}
             >
-              {bookListStore.map(title => (
+              {bookList.map(title => (
                 <option key={title} value={title}>
                   {title}
                 </option>

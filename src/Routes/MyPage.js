@@ -15,10 +15,11 @@ const MyPage = () => {
   };
   callApi();
 */
-  const logInStore = useContext(Store)["logIn"];
 
-  const username = logInStore.userInfo[0];
-  const email = logInStore.userInfo[1];
+  const { logIn } = useContext(Store);
+
+  const username = logIn.userInfo[0];
+  const email = logIn.userInfo[1];
   return (
     <>
       <h1>이름: {username}</h1>

@@ -32,27 +32,11 @@ const App = () => {
     console.log("App Mounted");
   }, []);
 
-  const changeLogInStatus = (status, userInfo) => {
-    console.log("login status:", status);
-    console.log("login userInfo:", userInfo);
-    if (status) {
-      setLogIn({
-        status,
-        text: "Log Out",
-        userInfo
-      });
-    } else {
-      setLogIn({
-        status,
-        text: "Log In",
-        userInfo
-      });
-    }
-  };
-
   const { status, text } = logIn;
+
   const providerValues = {
     logIn,
+    setLogIn,
     bookList: booklist
   };
 
@@ -60,11 +44,7 @@ const App = () => {
     <>
       <h1 className="banner">Book Club</h1>
       <Store.Provider value={providerValues}>
-        <AppRouter
-          logInStatus={status}
-          logInMenuText={text}
-          onChangeLogInStatus={changeLogInStatus}
-        />
+        <AppRouter logInStatus={status} logInMenuText={text} />
       </Store.Provider>
     </>
   );

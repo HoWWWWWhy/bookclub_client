@@ -1,8 +1,11 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useContext } from "react";
 import "./AccessControl.css";
+import Store from "../store";
 
 const AccessControl = props => {
   console.log(props);
+
+  const { logIn, setLogIn } = useContext(Store);
 
   const SCOPE = "https://www.googleapis.com/auth/calendar.readonly";
   const CLIENT_ID =
@@ -48,7 +51,7 @@ const AccessControl = props => {
     console.log("Error");
   };
 
-  const logIn = () => {
+  const googleLogIn = () => {
     console.log("try log in");
     const logInOptions = {
       scope: SCOPE
@@ -67,15 +70,25 @@ const AccessControl = props => {
           currentUserName,
           currentUserEmail
         ]);
-        props.onChangeLogInStatus(true, JSON.parse(currentUserInfo));
+        //props.onChangeLogInStatus(true, JSON.parse(currentUserInfo));
+        setLogIn({
+          status: true,
+          text: "Log Out",
+          userInfo: JSON.parse(currentUserInfo)
+        });
         localStorage.setItem("currentUserInfo", currentUserInfo);
       }
     });
   };
 
-  const logOut = () => {
+  const googleLogOut = () => {
     console.log("try log out");
-    props.onChangeLogInStatus(false, "");
+    //props.onChangeLogInStatus(false, "");
+    setLogIn({
+      status: false,
+      text: "Log In",
+      userInfo: ""
+    });
     localStorage.removeItem("currentUserInfo");
     /*
     window.myGoogleAuth.disconnect().then(() => {
@@ -111,10 +124,10 @@ const AccessControl = props => {
   return (
     <>
       <div className="AccessControl">
-        {props.logInStatus === false ? (
-          <button className="googleLoginButton" onClick={logIn}></button>
+        {logIn.status === false ? (
+          <button className="googleLoginButton" onClick={googleLogIn}></button>
         ) : props.logOutCmd ? (
-          logOut()
+          googleLogOut()
         ) : (
           <div></div>
         )}
