@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import "../Routes/Style.css";
+import "../Routes/RouteStyle.css";
 
 const APP_KEY = "KakaoAK 1f698c0e878c26fc60d8ea76d57c8b87";
 

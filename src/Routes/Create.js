@@ -1,5 +1,5 @@
 import React, { useState, useContext } from "react";
-import "./Style.css";
+import "./RouteStyle.css";
 import Store from "../store";
 
 const Create = () => {

@@ -1,6 +1,6 @@
 import React, { useEffect, useContext } from "react";
 import BookCard from "../Components/BookCard.js";
-import "./Style.css";
+import "./RouteStyle.css";
 import Store from "../store";
 
 const Home = () => {
