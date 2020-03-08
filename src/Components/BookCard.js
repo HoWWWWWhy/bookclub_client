@@ -43,6 +43,7 @@ const BookCard = props => {
       <div className="bookCardTitle">
         <a href="naver.com">{bookTitle}</a>
       </div>
+      <div>by {bookInfo.authors}</div>
       <a
         className="bookCardLink"
         href={bookInfo.url}

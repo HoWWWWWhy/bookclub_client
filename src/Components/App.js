@@ -4,7 +4,13 @@ import "./App.css";
 import AppRouter from "./AppRouter";
 import Store from "../store";
 
-const booklist = ["서툰 감정", "내 생애의 아이들", "예감은 틀리지 않는다"];
+import firebase from "../firebase";
+// Add the Firebase products that you want to use
+import "firebase/auth";
+import "firebase/firestore";
+
+//temporary test booklist
+//const booklist = ["서툰 감정", "내 생애의 아이들", "예감은 틀리지 않는다"];
 
 const checkLogInStatus = () =>
   JSON.parse(localStorage.getItem("currentUserInfo"));
@@ -28,8 +34,19 @@ const App = () => {
     }
   });
 
+  const [bookList, setBookList] = useState([]);
+
   useEffect(() => {
     console.log("App Mounted");
+    const getBooks = async () => {
+      const db = firebase.firestore();
+      const books = await db.collection("books").get();
+      books.docs.map(doc => console.log(doc.data()));
+
+      setBookList(books.docs.map(doc => doc.data()["title"]));
+    };
+
+    getBooks();
   }, []);
 
   const { status, text } = logIn;
@@ -37,7 +54,7 @@ const App = () => {
   const providerValues = {
     logIn,
     setLogIn,
-    bookList: booklist
+    bookList
   };
 
   return (
