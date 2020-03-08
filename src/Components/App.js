@@ -4,7 +4,7 @@ import "./App.css";
 import AppRouter from "./AppRouter";
 import Store from "../store";
 
-const booklist = ["서툰 감정", "내 생애의 아이들", "Night Flight"];
+const booklist = ["서툰 감정", "내 생애의 아이들", "예감은 틀리지 않는다"];
 
 const checkLogInStatus = () =>
   JSON.parse(localStorage.getItem("currentUserInfo"));

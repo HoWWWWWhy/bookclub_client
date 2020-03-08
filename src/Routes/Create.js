@@ -16,7 +16,7 @@ const Create = () => {
     console.log("review:", review);
   };
 
-  const username = logIn.userInfo[0];
+  const nickname = logIn.userInfo[2];
 
   return (
     <>
@@ -38,7 +38,7 @@ const Create = () => {
           </label>
         </div>
         <div>
-          <label>작성자: {username}</label>
+          <label>작성자: {nickname}</label>
         </div>
 
         <div>

@@ -1,5 +1,7 @@
-import React, { useContext } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import Store from "../store";
+import * as firebase from "firebase/app";
+import "firebase/firestore";
 
 const MyPage = () => {
   /*
@@ -16,14 +18,54 @@ const MyPage = () => {
   callApi();
 */
 
-  const { logIn } = useContext(Store);
+  const { logIn, setLogIn } = useContext(Store);
 
-  const username = logIn.userInfo[0];
+  const name = logIn.userInfo[0];
   const email = logIn.userInfo[1];
+
+  const [nickname, setNickname] = useState(logIn.userInfo[2]);
+
+  const handleSubmit = event => {
+    event.preventDefault();
+    console.log("nickname:", nickname);
+
+    const db = firebase.firestore();
+    const usersRef = db.collection("users");
+    const userDoc = usersRef.doc(name);
+    userDoc
+      .update({
+        nickname
+      })
+      .then(function() {
+        console.log("Document successfully updated!");
+        const currentUserInfo = JSON.stringify([name, email, nickname]);
+        setLogIn(prevState => ({
+          ...prevState,
+          userInfo: JSON.parse(currentUserInfo)
+        }));
+        localStorage.setItem("currentUserInfo", currentUserInfo);
+      })
+      .catch(function(error) {
+        // The document probably doesn't exist.
+        console.error("Error updating document: ", error);
+      });
+  };
+
   return (
     <>
-      <h1>이름: {username}</h1>
-      <h1>Email: {email}</h1>
+      <div>Name: {name}</div>
+      <div>Email: {email}</div>
+      <form onSubmit={handleSubmit}>
+        <label>
+          Display Name:
+          <input
+            type="text"
+            value={nickname}
+            onChange={event => setNickname(event.target.value)}
+          />
+        </label>
+        <input type="submit" value="Apply" />
+      </form>
     </>
   );
 };
