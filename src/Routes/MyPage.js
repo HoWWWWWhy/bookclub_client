@@ -28,27 +28,35 @@ const MyPage = () => {
   const handleSubmit = event => {
     event.preventDefault();
     console.log("nickname:", nickname);
-
-    const db = firebase.firestore();
-    const usersRef = db.collection("users");
-    const userDoc = usersRef.doc(name);
-    userDoc
-      .update({
-        nickname
-      })
-      .then(function() {
-        console.log("Document successfully updated!");
-        const currentUserInfo = JSON.stringify([name, email, nickname]);
-        setLogIn(prevState => ({
-          ...prevState,
-          userInfo: JSON.parse(currentUserInfo)
-        }));
-        localStorage.setItem("currentUserInfo", currentUserInfo);
-      })
-      .catch(function(error) {
-        // The document probably doesn't exist.
-        console.error("Error updating document: ", error);
-      });
+    firebase.auth().onAuthStateChanged(function(user) {
+      if (user) {
+        // User is signed in.
+        console.log("User is signed in.");
+        const db = firebase.firestore();
+        const usersRef = db.collection("users");
+        const userDoc = usersRef.doc(user.uid);
+        userDoc
+          .update({
+            nickname
+          })
+          .then(function() {
+            console.log("Document successfully updated!");
+            const currentUserInfo = JSON.stringify([name, email, nickname]);
+            setLogIn(prevState => ({
+              ...prevState,
+              userInfo: JSON.parse(currentUserInfo)
+            }));
+            localStorage.setItem("currentUserInfo", currentUserInfo);
+          })
+          .catch(function(error) {
+            // The document probably doesn't exist.
+            console.error("Error updating document: ", error);
+          });
+      } else {
+        // No user is signed in.
+        console.log("No user is signed in.");
+      }
+    });
   };
 
   return (

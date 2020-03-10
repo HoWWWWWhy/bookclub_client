@@ -5,6 +5,7 @@
 
 body {
   margin: 0;
+  /*background-color: #f0f5f5;*/
 }
 
 .banner {
@@ -17,7 +18,7 @@ body {
 }
 
 ul {
-  list-style-type : none;
+  list-style-type: none;
   margin: 0;
   padding: 0;
   overflow: hidden;
@@ -44,4 +45,3 @@ li a:hover:not(.active) {
 .menu_right {
   float: right;
 }
-

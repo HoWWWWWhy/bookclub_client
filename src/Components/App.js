@@ -46,6 +46,17 @@ const App = () => {
       setBookList(books.docs.map(doc => doc.data()["title"]));
     };
 
+    //current user check, will be deleted.
+    firebase.auth().onAuthStateChanged(function(user) {
+      if (user) {
+        // User is signed in.
+        console.log("App: User is signed in.");
+      } else {
+        // No user is signed in.
+        console.log("App: No user is signed in.");
+      }
+    });
+
     getBooks();
   }, []);
 

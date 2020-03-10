@@ -13,8 +13,7 @@ const AccessControl = props => {
   const { logIn, setLogIn } = useContext(Store);
   /*
   const SCOPE = "https://www.googleapis.com/auth/calendar.readonly";
-  const CLIENT_ID =
-    "656710910908-gqama28gdl4tm4d8cqke1ei94jm5nq38.apps.googleusercontent.com";
+  const CLIENT_ID = process.env.REACT_APP_GOOGLEAUTH_CLIENT_ID;
 */
   useEffect(() => {
     console.log("AccessControl Mounted");
@@ -140,14 +139,14 @@ const AccessControl = props => {
 
           //const photoUrl = user.photoURL;
           //const emailVerified = user.emailVerified;
-          //const uid = user.uid; // The user's ID, unique to the Firebase project. Do NOT use
+          const uid = user.uid; // The user's ID, unique to the Firebase project. Do NOT use
           // this value to authenticate with your backend server, if
           // you have one. Use User.getToken() instead.
           console.log(user);
 
           const db = firebase.firestore();
           const usersRef = db.collection("users");
-          const userDoc = usersRef.doc(name);
+          const userDoc = usersRef.doc(uid);
 
           const getNickname = async () => {
             try {
@@ -162,7 +161,7 @@ const AccessControl = props => {
                 console.log("Add document!");
                 nickname = name;
 
-                usersRef.doc(name).set({
+                usersRef.doc(uid).set({
                   name,
                   email,
                   nickname
