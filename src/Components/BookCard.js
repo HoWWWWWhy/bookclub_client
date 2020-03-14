@@ -1,11 +1,15 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import "../Routes/RouteStyle.css";
+import { Link } from "react-router-dom";
 
-const APP_KEY = "KakaoAK 1f698c0e878c26fc60d8ea76d57c8b87";
+import Store from "../store";
+
+const APP_KEY = process.env.REACT_APP_KAKAO_APP_KEY;
 
 const BookCard = props => {
   const [bookInfo, setBookInfo] = useState([]);
   const bookTitle = props.bookTitle;
+  const bookId = props.bookId;
 
   useEffect(() => {
     //const abortController = new AbortController();
@@ -39,24 +43,27 @@ const BookCard = props => {
   }, [bookTitle]);
 
   return (
-    <div className="bookCard">
-      <div className="bookCardTitle">
-        <a href="naver.com">{bookTitle}</a>
+    <>
+      <div className="bookCard">
+        <div className="bookCardTitle">
+          <Link to={"/read/" + bookId}>{bookTitle}</Link>
+        </div>
+
+        <div>by {bookInfo.authors}</div>
+        <a
+          className="bookCardLink"
+          href={bookInfo.url}
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <img
+            className="bookCardThumbnail"
+            src={bookInfo.thumbnail}
+            alt={bookInfo.title}
+          />
+        </a>
       </div>
-      <div>by {bookInfo.authors}</div>
-      <a
-        className="bookCardLink"
-        href={bookInfo.url}
-        target="_blank"
-        rel="noopener noreferrer"
-      >
-        <img
-          className="bookCardThumbnail"
-          src={bookInfo.thumbnail}
-          alt={bookInfo.title}
-        />
-      </a>
-    </div>
+    </>
   );
 };
 

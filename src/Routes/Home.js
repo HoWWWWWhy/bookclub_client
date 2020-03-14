@@ -4,9 +4,9 @@ import "./RouteStyle.css";
 import Store from "../store";
 
 const Home = () => {
-  const { logIn, bookList } = useContext(Store);
+  const { logIn, bookList, bookIdList } = useContext(Store);
   const nickname = logIn.userInfo[2];
-
+  console.log(bookList);
   useEffect(() => {
     console.log("Home Mounted");
   }, []);
@@ -19,8 +19,8 @@ const Home = () => {
       <h2>지금까지 읽은 도서리스트</h2>
       {
         <div className="bookCardContainer">
-          {bookList.map(title => (
-            <BookCard key={title} bookTitle={title} />
+          {bookList.map((title, i) => (
+            <BookCard key={title} bookTitle={title} bookId={bookIdList[i]} />
           ))}
         </div>
       }

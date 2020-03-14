@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useContext } from "react";
 import {
   BrowserRouter as Router,
   NavLink,
@@ -22,7 +22,7 @@ const LogInRoutes = () => {
       <Route exact path="/" component={Home}></Route>
       <Route path="/home" component={Home}></Route>
       <Route path="/create" component={Create}></Route>
-      <Route path="/read" component={Read}></Route>
+      <Route path="/read/:book_id" component={Read}></Route>
       <Route path="/mypage" component={MyPage}></Route>
       <Route
         path="/logout"
@@ -68,11 +68,6 @@ const AppRouter = props => {
               <li className="menu_left">
                 <NavLink to="/create" activeClassName="selected">
                   Write
-                </NavLink>
-              </li>
-              <li className="menu_left">
-                <NavLink to="/read" activeClassName="selected">
-                  View
                 </NavLink>
               </li>
               <li className="menu_right">

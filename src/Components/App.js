@@ -35,14 +35,16 @@ const App = () => {
   });
 
   const [bookList, setBookList] = useState([]);
+  const [bookIdList, setBookIdList] = useState([]);
 
   useEffect(() => {
     console.log("App Mounted");
     const getBooks = async () => {
       const db = firebase.firestore();
       const books = await db.collection("books").get();
-      books.docs.map(doc => console.log(doc.data()));
 
+      books.docs.map(doc => console.log(doc.id, doc.data()));
+      setBookIdList(books.docs.map(doc => doc.id));
       setBookList(books.docs.map(doc => doc.data()["title"]));
     };
 
@@ -65,7 +67,8 @@ const App = () => {
   const providerValues = {
     logIn,
     setLogIn,
-    bookList
+    bookList,
+    bookIdList
   };
 
   return (

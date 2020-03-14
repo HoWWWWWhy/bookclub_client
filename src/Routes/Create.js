@@ -9,16 +9,22 @@ import "firebase/auth";
 import "firebase/firestore";
 
 const Create = () => {
-  const { logIn, bookList } = useContext(Store);
-
+  const { logIn, bookList, bookIdList } = useContext(Store);
+  console.log(bookList);
   const [isSubmitted, setIsSubmitted] = useState(false);
-  const [bookTitle, setBookTitle] = useState(bookList[1]);
+  const [bookId, setBookId] = useState(bookIdList[0]);
+  const [bookTitle, setBookTitle] = useState(bookList[0]);
   const [title, setTitle] = useState("");
   const [contents, setContents] = useState("");
 
+  const setBookIdAndTitle = selectedBookTitle => {
+    setBookTitle(selectedBookTitle);
+    setBookId(bookIdList[bookList.IndexOf(selectedBookTitle)]);
+  };
+
   const setReviews = async userId => {
     const db = firebase.firestore();
-    const bookDoc = await db.collection("books").doc(bookTitle);
+    const bookDoc = await db.collection("books").doc(bookId);
     const reviewsRef = await bookDoc.collection("reviews");
     reviewsRef.doc(userId).set({
       nickname,
@@ -65,7 +71,7 @@ const Create = () => {
             <select
               className="selectBox"
               value={bookTitle}
-              onChange={event => setBookTitle(event.target.value)}
+              onChange={event => setBookIdAndTitle(event.target.value)}
             >
               {bookList.map(title => (
                 <option key={title} value={title}>
