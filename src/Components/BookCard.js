@@ -1,8 +1,6 @@
-import React, { useState, useEffect, useContext } from "react";
-import "../Routes/RouteStyle.css";
+import React, { useState, useEffect } from "react";
+import "./ComponentStyle.css";
 import { Link } from "react-router-dom";
-
-import Store from "../store";
 
 const APP_KEY = process.env.REACT_APP_KAKAO_APP_KEY;
 
@@ -12,7 +10,7 @@ const BookCard = props => {
   const bookId = props.bookId;
 
   useEffect(() => {
-    //const abortController = new AbortController();
+    let isMounted = true;
 
     const API_URL = `https://dapi.kakao.com/v3/search/book?query=${bookTitle}&title=${bookTitle}`;
     //console.log("BookCard Mounted");
@@ -34,11 +32,13 @@ const BookCard = props => {
       //console.log(data.documents[0]);
       setBookInfo(data.documents[0]);
     };
-    searchBook();
+    if (isMounted) {
+      searchBook();
+    }
 
     return () => {
+      isMounted = false;
       console.log("BookCard unmounted");
-      //abortController.abort();
     };
   }, [bookTitle]);
 

@@ -6,7 +6,7 @@ import Store from "../store";
 const Home = () => {
   const { logIn, bookList, bookIdList } = useContext(Store);
   const nickname = logIn.userInfo[2];
-  console.log(bookList);
+
   useEffect(() => {
     console.log("Home Mounted");
   }, []);

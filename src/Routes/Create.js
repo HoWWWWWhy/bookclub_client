@@ -19,15 +19,14 @@ const Create = () => {
 
   const setBookIdAndTitle = selectedBookTitle => {
     setBookTitle(selectedBookTitle);
-    setBookId(bookIdList[bookList.IndexOf(selectedBookTitle)]);
+    setBookId(bookIdList[bookList.indexOf(selectedBookTitle)]);
   };
 
   const setReviews = async userId => {
     const db = firebase.firestore();
-    const bookDoc = await db.collection("books").doc(bookId);
-    const reviewsRef = await bookDoc.collection("reviews");
+    const bookDoc = db.collection("books").doc(bookId);
+    const reviewsRef = bookDoc.collection("reviews");
     reviewsRef.doc(userId).set({
-      nickname,
       title,
       contents
     });

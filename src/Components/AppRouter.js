@@ -1,4 +1,4 @@
-import React, { useEffect, useContext } from "react";
+import React from "react";
 import {
   BrowserRouter as Router,
   NavLink,
@@ -7,7 +7,7 @@ import {
   Redirect
 } from "react-router-dom";
 
-import "./AppRouter.css";
+import "./ComponentStyle.css";
 import Home from "../Routes/Home";
 import Create from "../Routes/Create";
 import Read from "../Routes/Read";
