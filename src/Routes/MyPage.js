@@ -18,15 +18,18 @@ const MyPage = () => {
   callApi();
 */
 
-  const { logIn, setLogIn } = useContext(Store);
+  const { logIn, setLogIn, setToastMessage } = useContext(Store);
 
   const name = logIn.userInfo[0];
   const email = logIn.userInfo[1];
 
   const [nickname, setNickname] = useState(logIn.userInfo[2]);
 
+  const [isSubmitted, setIsSubmitted] = useState(false);
+
   const handleSubmit = event => {
     event.preventDefault();
+
     console.log("nickname:", nickname);
     firebase.auth().onAuthStateChanged(function(user) {
       if (user) {
@@ -47,6 +50,7 @@ const MyPage = () => {
               userInfo: JSON.parse(currentUserInfo)
             }));
             localStorage.setItem("currentUserInfo", currentUserInfo);
+            setIsSubmitted(true);
           })
           .catch(function(error) {
             // The document probably doesn't exist.
@@ -69,11 +73,16 @@ const MyPage = () => {
           <input
             type="text"
             value={nickname}
-            onChange={event => setNickname(event.target.value)}
+            onChange={event => {
+              setIsSubmitted(false);
+              setNickname(event.target.value);
+            }}
           />
         </label>
         <input type="submit" value="Apply" />
       </form>
+
+      {isSubmitted && setToastMessage("success", "닉네임이 변경되었습니다!")}
     </>
   );
 };

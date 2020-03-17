@@ -9,11 +9,17 @@ import firebase from "../firebase";
 import "firebase/auth";
 import "firebase/firestore";
 
+import ToastMessage from "../Components/ToastMessage";
+
 //temporary test booklist
 //const booklist = ["서툰 감정", "내 생애의 아이들", "예감은 틀리지 않는다"];
 
 const checkLogInStatus = () =>
   JSON.parse(localStorage.getItem("currentUserInfo"));
+
+const setToastMessage = (type, message, fcn) => {
+  return <ToastMessage type={type} message={message} onCloseFcn={fcn} />;
+};
 
 const App = () => {
   const [logIn, setLogIn] = useState(() => {
@@ -43,22 +49,9 @@ const App = () => {
       const db = firebase.firestore();
       const books = await db.collection("books").get();
 
-      books.docs.map(doc => console.log(doc.id, doc.data()));
       setBookIdList(books.docs.map(doc => doc.id));
       setBookList(books.docs.map(doc => doc.data()["title"]));
     };
-
-    //current user check, will be deleted.
-    firebase.auth().onAuthStateChanged(function(user) {
-      if (user) {
-        // User is signed in.
-        console.log("App: User is signed in.");
-      } else {
-        // No user is signed in.
-        console.log("App: No user is signed in.");
-      }
-    });
-
     getBooks();
   }, []);
 
@@ -68,7 +61,8 @@ const App = () => {
     logIn,
     setLogIn,
     bookList,
-    bookIdList
+    bookIdList,
+    setToastMessage
   };
 
   return (

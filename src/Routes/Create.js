@@ -2,16 +2,17 @@ import React, { useState, useContext } from "react";
 import "./RouteStyle.css";
 import Store from "../store";
 import { Redirect } from "react-router-dom";
-import Notification from "../Components/Notification";
+
 import firebase from "../firebase";
 // Add the Firebase products that you want to use
 import "firebase/auth";
 import "firebase/firestore";
 
 const Create = () => {
-  const { logIn, bookList, bookIdList } = useContext(Store);
-  console.log(bookList);
+  const { logIn, bookList, bookIdList, setToastMessage } = useContext(Store);
+
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const [isRedirect, setIsRedirect] = useState(false);
   const [bookId, setBookId] = useState(bookIdList[0]);
   const [bookTitle, setBookTitle] = useState(bookList[0]);
   const [title, setTitle] = useState("");
@@ -30,20 +31,15 @@ const Create = () => {
       title,
       contents
     });
-    /*
-    const doc = await reviewDoc.get();
-    if (doc.exists) {
-      console.log("Document data:", doc.data());
-    } else {
-      // doc.data() will be undefined in this case
-      console.log("No document!");
-    }*/
   };
+
+  const toastCloseFcn = () => {
+    setIsSubmitted(false);
+    setIsRedirect(true);
+  };
+
   const handleSubmit = event => {
     event.preventDefault();
-    console.log("bookTitle:", bookTitle);
-    console.log("title:", title);
-    console.log("contents:", contents);
 
     firebase.auth().onAuthStateChanged(function(user) {
       if (user) {
@@ -51,6 +47,7 @@ const Create = () => {
         console.log("Create: User is signed in.");
         setReviews(user.uid);
         setIsSubmitted(true);
+
         //books.docs.map(doc => console.log(doc.data()));
       } else {
         // No user is signed in.
@@ -70,7 +67,10 @@ const Create = () => {
             <select
               className="selectBox"
               value={bookTitle}
-              onChange={event => setBookIdAndTitle(event.target.value)}
+              onChange={event => {
+                setIsSubmitted(false);
+                setBookIdAndTitle(event.target.value);
+              }}
             >
               {bookList.map(title => (
                 <option key={title} value={title}>
@@ -91,7 +91,10 @@ const Create = () => {
               className="titleEdit"
               type="text"
               value={title}
-              onChange={event => setTitle(event.target.value)}
+              onChange={event => {
+                setIsSubmitted(false);
+                setTitle(event.target.value);
+              }}
             />
           </label>
         </div>
@@ -101,13 +104,19 @@ const Create = () => {
             <textarea
               className="reviewEdit"
               value={contents}
-              onChange={event => setContents(event.target.value)}
+              onChange={event => {
+                setIsSubmitted(false);
+                setContents(event.target.value);
+              }}
             />
           </label>
         </div>
         <input type="submit" value="Submit" />
       </form>
-      {isSubmitted && <Redirect from="/create" to="/" />}
+      {/*isSubmitted && <ToastMessage type="success" message="등록되었습니다!" />*/}
+      {isSubmitted &&
+        setToastMessage("success", "등록되었습니다!", toastCloseFcn)}
+      {isRedirect && <Redirect from="/create" to="/" />}
     </>
   );
 };
