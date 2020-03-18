@@ -31,6 +31,19 @@ const Create = () => {
       title,
       contents
     });
+
+    const userDoc = db.collection("users").doc(userId);
+    const doc = await userDoc.get();
+    if (doc.exists) {
+      userDoc.set(
+        {
+          reviews: firebase.firestore.FieldValue.arrayUnion(bookId)
+        },
+        { merge: true }
+      );
+    } else {
+      console.log("No Document data");
+    }
   };
 
   const toastCloseFcn = () => {
