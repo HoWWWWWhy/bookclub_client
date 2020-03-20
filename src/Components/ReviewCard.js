@@ -16,11 +16,11 @@ const ReviewCard = props => {
 
   return (
     <>
-      <div className="reviewCard">
+      <article className="reviewCard">
         <div>{title}</div>
         <div>by {nickname}</div>
         <div>{contents}</div>
-      </div>
+      </article>
     </>
   );
 };

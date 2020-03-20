@@ -1,10 +1,12 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import "./ComponentStyle.css";
 import { Link } from "react-router-dom";
+import Store from "../store";
 
 const APP_KEY = process.env.REACT_APP_KAKAO_APP_KEY;
 
 const BookCard = props => {
+  const { logIn } = useContext(Store);
   const [bookInfo, setBookInfo] = useState([]);
   const bookTitle = props.bookTitle;
   const bookId = props.bookId;
@@ -44,12 +46,17 @@ const BookCard = props => {
 
   return (
     <>
-      <div className="bookCard">
+      <article className="bookCard">
         <div className="bookCardTitle">
-          <Link to={"/read/" + bookId}>{bookTitle}</Link>
+          {logIn.status ? (
+            <Link to={"/read/" + bookId}>{bookTitle}</Link>
+          ) : (
+            <span>{bookTitle}</span>
+          )}
         </div>
 
         <div>by {bookInfo.authors}</div>
+
         <a
           className="bookCardLink"
           href={bookInfo.url}
@@ -62,7 +69,7 @@ const BookCard = props => {
             alt={bookInfo.title}
           />
         </a>
-      </div>
+      </article>
     </>
   );
 };
