@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import "./RouteStyle.css";
 import Store from "../store";
 import { Redirect } from "react-router-dom";
@@ -7,6 +7,29 @@ import firebase from "../firebase";
 // Add the Firebase products that you want to use
 import "firebase/auth";
 import "firebase/firestore";
+
+const getReviewTitleAndContents = async bookId => {
+  return new Promise(function(resolve, reject) {
+    firebase.auth().onAuthStateChanged(async user => {
+      if (user) {
+        const db = firebase.firestore();
+        const bookDoc = db.collection("books").doc(bookId);
+        const userDoc = bookDoc.collection("reviews").doc(user.uid);
+        const doc = await userDoc.get();
+        if (doc.exists) {
+          //console.log(doc.data()["title"]);
+          resolve([doc.data()["title"], doc.data()["contents"]]);
+        } else {
+          resolve(["", ""]);
+        }
+      } else {
+        // No user is signed in.
+        console.log("Create: No user is signed in.");
+        reject(Error("No user is signed in."));
+      }
+    });
+  });
+};
 
 const Create = () => {
   const { logIn, bookList, bookIdList, setToastMessage } = useContext(Store);
@@ -17,6 +40,19 @@ const Create = () => {
   const [bookTitle, setBookTitle] = useState(bookList[0]);
   const [title, setTitle] = useState("");
   const [contents, setContents] = useState("");
+
+  useEffect(() => {
+    console.log("Create Mounted");
+    const getSavedTitleAndContents = async () => {
+      const [savedTitle, savedContents] = await getReviewTitleAndContents(
+        bookId
+      );
+
+      setTitle(savedTitle);
+      setContents(savedContents);
+    };
+    getSavedTitleAndContents();
+  }, [bookId]);
 
   const setBookIdAndTitle = selectedBookTitle => {
     setBookTitle(selectedBookTitle);
