@@ -1,6 +1,11 @@
 import React, { useState, useEffect, useContext } from "react";
 import "./ComponentStyle.css";
 import { Link } from "react-router-dom";
+import { Tooltip } from "@material-ui/core";
+import DescriptionIcon from "@material-ui/icons/Description";
+import PostAddIcon from "@material-ui/icons/PostAdd";
+import DeleteIcon from "@material-ui/icons/Delete";
+
 import Store from "../store";
 
 const APP_KEY = process.env.REACT_APP_KAKAO_APP_KEY;
@@ -47,16 +52,6 @@ const BookCard = props => {
   return (
     <>
       <article className="bookCard">
-        <div className="bookCardTitle">
-          {logIn.status ? (
-            <Link to={"/read/" + bookId}>{bookTitle}</Link>
-          ) : (
-            <span>{bookTitle}</span>
-          )}
-        </div>
-
-        <div>by {bookInfo.authors}</div>
-
         <a
           className="bookCardLink"
           href={bookInfo.url}
@@ -69,6 +64,23 @@ const BookCard = props => {
             alt={bookInfo.title}
           />
         </a>
+        <Tooltip title={`by ${bookInfo.authors}`} placement="bottom-end">
+          <div className="bookCardTitle">{bookTitle}</div>
+        </Tooltip>
+        {logIn.status ? (
+          <div className="IconBox">
+            <Link className="Icon" to={"/read/" + bookId}>
+              <DescriptionIcon />
+            </Link>
+            <Link className="Icon" to={"/create/" + bookId}>
+              <PostAddIcon />
+            </Link>
+
+            <DeleteIcon className="Icon" />
+          </div>
+        ) : (
+          <div></div>
+        )}
       </article>
     </>
   );

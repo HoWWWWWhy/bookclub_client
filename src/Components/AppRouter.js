@@ -21,7 +21,7 @@ const LogInRoutes = () => {
     <Switch>
       <Route exact path="/" component={Home}></Route>
       <Route path="/home" component={Home}></Route>
-      <Route path="/create" component={Create}></Route>
+      <Route path="/create/:book_id" component={Create}></Route>
       <Route path="/read/:book_id" component={Read}></Route>
       <Route path="/mypage" component={MyPage}></Route>
       <Route
@@ -63,11 +63,6 @@ const AppRouter = props => {
               <li className="menu_left">
                 <NavLink to="/home" activeClassName="selected">
                   HOME
-                </NavLink>
-              </li>
-              <li className="menu_left">
-                <NavLink to="/create" activeClassName="selected">
-                  Write
                 </NavLink>
               </li>
               <li className="menu_right">

@@ -1,8 +1,7 @@
 import React, { useState, useContext, useEffect } from "react";
 import "./RouteStyle.css";
 import Store from "../store";
-import { Redirect } from "react-router-dom";
-
+import { Redirect, useParams } from "react-router-dom";
 import firebase from "../firebase";
 // Add the Firebase products that you want to use
 import "firebase/auth";
@@ -32,6 +31,7 @@ const getReviewTitleAndContents = async bookId => {
 };
 
 const Create = () => {
+  const { book_id } = useParams();
   const { logIn, bookList, bookIdList, setToastMessage } = useContext(Store);
 
   const [isSubmitted, setIsSubmitted] = useState(false);
@@ -43,16 +43,23 @@ const Create = () => {
 
   useEffect(() => {
     console.log("Create Mounted");
+    const setBookIdAndTitle = selectedBookId => {
+      setBookId(selectedBookId);
+      setBookTitle(bookList[bookIdList.indexOf(selectedBookId)]);
+    };
+
     const getSavedTitleAndContents = async () => {
       const [savedTitle, savedContents] = await getReviewTitleAndContents(
-        bookId
+        book_id
       );
 
       setTitle(savedTitle);
       setContents(savedContents);
     };
+
+    setBookIdAndTitle(book_id);
     getSavedTitleAndContents();
-  }, [bookId]);
+  }, [book_id, bookList, bookIdList]);
 
   const setBookIdAndTitle = selectedBookTitle => {
     setBookTitle(selectedBookTitle);

@@ -81,11 +81,12 @@ const Read = () => {
   return (
     <>
       <h1>{bookTitle}</h1>
+
       <div>
         {reviewList.length > 0 ? (
           JSON.stringify(reviewList)
         ) : (
-          <div>No Review</div>
+          <div>Loading</div>
         )}
       </div>
       {
