@@ -1,4 +1,4 @@
-import React, { useEffect, useContext } from "react";
+import React, { useEffect, useContext, useState } from "react";
 import "./RouteStyle.css";
 import Store from "../store";
 
@@ -7,10 +7,13 @@ import firebase from "../firebase";
 import "firebase/auth";
 import "firebase/firestore";
 
+import ModalBox from "../Components/ModalBox";
+
 const AccessControl = props => {
   console.log(props);
 
   const { logIn, setLogIn } = useContext(Store);
+  const [modalIsOpen, setModalIsOpen] = useState(true);
 
   useEffect(() => {
     console.log("AccessControl Mounted");
@@ -95,23 +98,33 @@ const AccessControl = props => {
       });
   };
 
-  const firebaseGoogleLogOut = () => {
-    firebase
-      .auth()
-      .signOut()
-      .then(function() {
-        // Sign-out successful.
-        console.log("Firebase signOut");
-        setLogIn({
-          status: false,
-          text: "Log In",
-          userInfo: ""
+  const firebaseGoogleLogOut = remember => {
+    if (remember) {
+      firebase
+        .auth()
+        .signOut()
+        .then(function() {
+          // Sign-out successful.
+          console.log("Firebase signOut");
+          setLogIn({
+            status: false,
+            text: "Log In",
+            userInfo: ""
+          });
+          localStorage.removeItem("currentUserInfo");
+        })
+        .catch(function(error) {
+          // An error happened.
+          console.log("Error: Firebase signOut");
         });
-        localStorage.removeItem("currentUserInfo");
-      })
-      .catch(function(error) {
-        // An error happened.
-      });
+    } else {
+      console.log("disconnect");
+    }
+  };
+
+  const onCloseRedirect = () => {
+    console.log("redirect");
+    props.history.push("/");
   };
 
   return (
@@ -123,7 +136,14 @@ const AccessControl = props => {
             onClick={firebaseGoogleLogIn}
           ></button>
         ) : (
-          firebaseGoogleLogOut()
+          <ModalBox
+            modalIsOpen={modalIsOpen}
+            setModalIsOpen={setModalIsOpen}
+            modalLabel="Logout Modal"
+            submitFunction={firebaseGoogleLogOut}
+            redirectFunction={onCloseRedirect}
+          />
+          //firebaseGoogleLogOut()
         )}
       </div>
     </>
